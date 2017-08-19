@@ -10,12 +10,12 @@ import Pux.Renderer.React (renderToDOM)
 -- LOCAL
 
 import App.View (view)
-import App.Update (foldp, AppEffects)
+import App.Update (foldp, init, AppEffects)
 
 main :: Eff (CoreEffects AppEffects) Unit
 main = do
   app <- start
-    { initialState: 0
+    { initialState: init
     , view
     , foldp
     , inputs: []

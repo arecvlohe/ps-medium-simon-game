@@ -2,4 +2,4 @@ module App.Events
   ( Event(..)
   ) where
 
-data Event = Increment | Decrement
+data Event = UserClick String | ResetColor

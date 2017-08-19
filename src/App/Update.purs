@@ -2,33 +2,37 @@ module App.Update
   ( State
   , AppEffects
   , foldp
+  , init
   ) where
 
 import Prelude
 
-import Pux (EffModel)
-import Control.Monad.Aff.Console (log)
+import Control.Monad.Aff (delay)
 import Control.Monad.Eff.Console (CONSOLE)
 import Data.Maybe (Maybe(..))
+import Data.Time.Duration (Milliseconds(..))
+import Pux (EffModel, noEffects)
 
 -- LOCAL
 
 import App.Events (Event(..))
 
-type State = Int
+type State =
+  { currentColor :: String
+  }
+
+init :: State
+init =
+  { currentColor: ""
+  }
 
 type AppEffects = (console :: CONSOLE)
 
 foldp :: Event -> State -> EffModel State Event AppEffects
-foldp Increment state =
-  { state: state + 1
+foldp (UserClick color) state =
+  { state: state { currentColor = color }
   , effects:
-    [ log (show $ state + 1) *> pure Nothing
-    ]
+    [ delay (Milliseconds 300.0) $> Just ResetColor ]
   }
-foldp Decrement state =
-  { state: state - 1
-  , effects:
-    [ log (show $ state - 1) *> pure Nothing
-    ]
-  }
+
+foldp ResetColor state = noEffects state { currentColor = "" }
